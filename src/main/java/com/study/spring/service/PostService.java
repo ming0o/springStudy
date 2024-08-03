@@ -2,6 +2,7 @@ package com.study.spring.service;
 
 import com.study.spring.domain.Post;
 import com.study.spring.dto.request.PostCreate;
+import com.study.spring.dto.response.PostResponse;
 import com.study.spring.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,5 +23,16 @@ public class PostService {
                 .build();
 
         postRepository.save(post);
+    }
+
+    public PostResponse get(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("존재하지 않는 글 입니다."));
+
+        return PostResponse.builder()
+                .id(post.getId())
+                .content(post.getContent())
+                .title(post.getTitle())
+                .build();
+
     }
 }

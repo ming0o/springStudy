@@ -1,12 +1,11 @@
 package com.study.spring.controller;
 
 import com.study.spring.dto.request.PostCreate;
+import com.study.spring.dto.response.PostResponse;
 import com.study.spring.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
@@ -19,4 +18,10 @@ public class PostController {
     public void post(@RequestBody PostCreate request){
         postService.write(request);
     }
+
+    @GetMapping("/post/{postId}")
+    public PostResponse get(@PathVariable("postId") Long id) {
+        return postService.get(id);
+    }
+
 }

@@ -1,7 +1,9 @@
 package com.study.spring.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.study.spring.domain.Post;
 import com.study.spring.dto.request.PostCreate;
+import com.study.spring.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class PostControllerTest {
+
+    @Autowired
+    private PostRepository postRepository;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -43,4 +49,23 @@ void test1() throws Exception{
             .andExpect(status().isOk())
             .andDo(print());
 }
+
+    @Test
+    @DisplayName("글 단건조회 요청")
+    void test2() throws Exception{
+        //given
+        Post post = Post.builder()
+                .title("제목요.")
+                .content("내용요.")
+                .build();
+
+        postRepository.save(post);
+
+        mockMvc.perform(get("/post/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andDo(print());
+    }
 }

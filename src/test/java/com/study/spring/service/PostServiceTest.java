@@ -2,6 +2,7 @@ package com.study.spring.service;
 
 import com.study.spring.domain.Post;
 import com.study.spring.dto.request.PostCreate;
+import com.study.spring.dto.response.PostResponse;
 import com.study.spring.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,4 +43,27 @@ class PostServiceTest {
         assertEquals("제목입니다.",post.getTitle());
         assertEquals("내용입니다.",post.getContent());
     }
+
+
+    @Test
+    @DisplayName("글 단건조회")
+    void test2() {
+        //given
+        Post post = Post.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+
+        //when
+        postRepository.save(post);
+
+        PostResponse response = postService.get(post.getId());
+
+        //then
+        assertNotNull(response);
+        assertEquals(1L, postRepository.count());
+        assertEquals("제목입니다.",response.getTitle());
+        assertEquals("내용입니다.",response.getContent());
+    }
+
 }
