@@ -1,6 +1,7 @@
 package com.study.spring.controller;
 
 import com.study.spring.dto.request.PostCreate;
+import com.study.spring.dto.request.PostUpdate;
 import com.study.spring.dto.response.PostResponse;
 import com.study.spring.service.PostService;
 import jakarta.validation.Valid;
@@ -30,5 +31,21 @@ public class PostController {
     @GetMapping("/post")
     public List<PostResponse> getAll(){ //게시물 전체 조회
         return postService.getAll();
+    }
+
+    @PatchMapping("/post/{postId}")
+    public PostResponse update(@PathVariable("postId") Long id,
+                               @RequestBody @Valid PostUpdate postUpdate) {
+        return postService.update(id, postUpdate);
+    }
+    /*
+     url: /api/signIn == 회원가입 >> 대신 /api/sign-in 이런식으로 하이픈을 쓰는 게 국룰임
+     전부 소문자, 언더바 대신 하이픈
+     Put: 부분 변경 ㄴㄴ 리소스 완전 대체, patch: 부분 변경 가능
+     */
+
+    @DeleteMapping("/post/{postId}")
+    public Long delete(@PathVariable("postId")Long id){
+        return postService.delete(id);
     }
 }

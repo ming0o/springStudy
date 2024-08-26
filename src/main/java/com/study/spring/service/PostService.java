@@ -2,7 +2,9 @@ package com.study.spring.service;
 
 import com.study.spring.domain.Post;
 import com.study.spring.dto.request.PostCreate;
+import com.study.spring.dto.request.PostUpdate;
 import com.study.spring.dto.response.PostResponse;
+import com.study.spring.exception.post.PostNotFound;
 import com.study.spring.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,5 +46,26 @@ public class PostService {
         List<Post> postList = postRepository.findAll();
 
         return postList.stream().map(PostResponse::new).collect(Collectors.toList());
+    }
+
+    public PostResponse update(Long id, PostUpdate postUpdate) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(PostNotFound::new);
+
+        post.update(postUpdate.getTitle(), postUpdate.getContent());
+
+        return PostResponse.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .build();
+    }
+
+    public Long delete(Long id) {
+        Post post = postRepository.findById(id)
+            .orElseThrow(PostNotFound::new);
+
+        postRepository.delete(post);
+        return post.getId();
     }
 }
